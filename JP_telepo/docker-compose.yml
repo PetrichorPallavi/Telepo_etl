@@ -1,0 +1,49 @@
+ # docker-compose.yml
+
+version: "3.9"
+
+services:
+  # -----------------------------
+  # PostGIS（PostgreSQL + GIS拡張）
+  # -----------------------------
+  postgis:
+    image: postgis/postgis:15-3.4
+    container_name: tokyo_postgis
+    restart: always  # コンテナ停止時に自動再起動
+    environment:
+      POSTGRES_USER: postgres        # DBユーザー名
+      POSTGRES_PASSWORD: postgres    # DBパスワード
+      POSTGRES_DB: tokyo_osm         # 使用するデータベース名
+    ports:
+      - "5433:5432"  # ホスト5433 → コンテナ5432へポートフォワード
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # DBデータの永続化
+      - ./data:/data                     # OSMデータ共有用ディレクトリ
+
+  # -----------------------------
+  # OSMデータをPostGISへインポート
+  # -----------------------------
+  osm2pgsql:
+    image: iboates/osm2pgsql
+    container_name: tokyo_osm_import
+    depends_on:
+      - postgis  # PostGIS起動後に実行
+    environment:
+      PGPASSWORD: postgres  # PostgreSQL接続用パスワード
+    volumes:
+      - ./data:/data  # OSMファイルをコンテナ内にマウント
+    entrypoint: >
+      osm2pgsql
+      -H postgis              # 接続先ホスト（サービス名）
+      -U postgres             # DBユーザー
+      -d tokyo_osm            # データベース名
+      --create                # 新規作成モード
+      --slim                  # 更新対応のための中間テーブル使用
+      --hstore                # タグ情報をkey-value形式で保存
+      /data/kanto-latest.osm.pbf  # インポートするOSMデータ
+
+# -----------------------------
+# ボリューム定義
+# -----------------------------
+volumes:
+  pgdata:  # PostgreSQLデータ保存用ボリューム
