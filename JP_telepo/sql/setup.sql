@@ -1,4 +1,5 @@
 --sql
+-- Get-Content sql/setup.sql | docker exec -i tokyo_postgis psql -U postgres -d tokyo_osm
 -- ==============================
 -- 1. EXTENSIONS
 -- ==============================
