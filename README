@@ -134,7 +134,14 @@ SQLを実行：
 ```bash
 docker exec -i tokyo_postgis psql -U postgres -d tokyo_osm < sql/setup.sql
 ```
-
+や
+```bash
+Get-Content sql/setup.sql | docker exec -i tokyo_postgis psql -U postgres -d tokyo_osm
+```
+や
+```bash
+type sql/setup.sql | docker exec -i tokyo_postgis psql -U postgres -d tokyo_osm
+```
 ---
 
 ## 6. ビジネスデータの更新
@@ -142,6 +149,13 @@ docker exec -i tokyo_postgis psql -U postgres -d tokyo_osm < sql/setup.sql
 ```bash
 docker exec -i tokyo_postgis psql -U postgres -d tokyo_osm < sql/refresh_business_table.sql
 ```
+や
+```bash
+Get-Content sql/refresh_business_table.sql | docker exec -i tokyo_postgis psql -U postgres -d tokyo_osm
+```
+や
+```bash
+type sql/refresh_business_table.sql | docker exec -i tokyo_postgis psql -U postgres -d tokyo_osm
 
 ---
 
