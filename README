@@ -132,7 +132,7 @@ docker compose run osm_import
 SQLを実行：
 
 ```bash
-docker exec -i tokyo_postgis psql -U postgres -d tokyo_osm < sql/create_business_table.sql
+docker exec -i tokyo_postgis psql -U postgres -d tokyo_osm < sql/setup.sql
 ```
 
 ---
@@ -203,7 +203,7 @@ tokyo-osm-system/
 │   └── db.py
 │
 ├── sql/
-│   ├── create_business_table.sql
+│   ├── setup.sql
 │   └── refresh_business_table.sql
 │
 ├── data/
